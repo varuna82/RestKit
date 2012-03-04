@@ -30,6 +30,13 @@
     for (currentNode = node; currentNode; currentNode = currentNode->next) {
         if (currentNode->type == XML_ELEMENT_NODE) {
             NSString* nodeName = [NSString stringWithCString:(char*)currentNode->name encoding:NSUTF8StringEncoding];
+            if (currentNode->ns != nil)
+            {
+                NSString *nsPrefix = [NSString stringWithCString:(char*)currentNode->ns->prefix 
+                                                        encoding:NSUTF8StringEncoding];
+                nodeName = [NSString stringWithFormat:@"%@:%@", nsPrefix, nodeName];
+            }
+
             id val = [self parseNode:currentNode->children];
             if ([val isKindOfClass:[NSString class]]) {
                 id oldVal = [attrs valueForKey:nodeName];
