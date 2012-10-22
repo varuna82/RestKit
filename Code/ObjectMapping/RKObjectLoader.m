@@ -262,7 +262,10 @@
         RKLogDebug(@"Beginning object mapping activities within GCD queue labeled: %s", dispatch_queue_get_label(self.mappingQueue));
         NSError *error = nil;
         _result = [[self performMapping:&error] retain];
-        NSAssert(_result || error, @"Expected performMapping to return a mapping result or an error.");
+        //NSAssert(_result || error, @"Expected performMapping to return a mapping result or an error.");
+        if (_result == nil) {
+            error = [NSError errorWithDomain:RKErrorDomain code:RKObjectLoaderUnexpectedResponseError  userInfo:nil];
+        }
         if (self.result) {
             [self processMappingResult:self.result];
         } else if (error) {
